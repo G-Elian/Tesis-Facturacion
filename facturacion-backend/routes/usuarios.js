@@ -1,3 +1,7 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
+
 // Buscar usuario por cédula
 router.get('/:cedula', (req, res) => {
   const { cedula } = req.params;
@@ -16,3 +20,5 @@ router.get('/:cedula', (req, res) => {
     res.json(result[0]);
   });
 });
+
+module.exports = router;
