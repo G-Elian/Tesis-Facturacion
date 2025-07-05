@@ -1,26 +1,3 @@
-// src/App.js
-<<<<<<< HEAD
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import CrearUsuarioForm from './components/CrearUsuarioForm';
-import FacturaForm from './components/FacturaForm';
-
-function App() {
-  return (
-    <Router>
-      <div className="container mt-4">
-        <h2>Sistema de Facturación de Agua</h2>
-        <nav className="mb-3">
-          <Link to="/" className="btn btn-primary me-2">Inicio</Link>
-          <Link to="/crear-usuario" className="btn btn-success me-2">Crear Usuario</Link>
-          <Link to="/crear-factura" className="btn btn-warning">Crear Factura</Link>
-        </nav>
-
-        <Routes>
-          <Route path="/" element={<h4>Bienvenido al sistema</h4>} />
-          <Route path="/crear-usuario" element={<CrearUsuarioForm />} />
-          <Route path="/crear-factura" element={<FacturaForm />} />
-=======
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import CrearUsuarioForm from './components/CrearUsuarioForm';
@@ -32,7 +9,7 @@ import UserPortal from './pages/UserPortal';
 // Componente de Login Simple
 function LoginPage({ onLogin }) {
   const navigate = useNavigate();
-  
+
   const handleLogin = (tipoUsuario) => {
     onLogin(tipoUsuario);
     if (tipoUsuario === 'admin') {
@@ -115,6 +92,7 @@ function Navigation({ tipoUsuario, onLogout }) {
   return null;
 }
 
+// Componente Principal App
 function App() {
   const [tipoUsuario, setTipoUsuario] = useState(null);
 
@@ -130,79 +108,81 @@ function App() {
     <Router>
       <div className="min-vh-100 bg-light">
         {tipoUsuario && <Navigation tipoUsuario={tipoUsuario} onLogout={handleLogout} />}
-        
+
         <Routes>
-          {/* Página de Login */}
-          <Route 
-            path="/" 
+          {/* Página de Login / Inicio */}
+          <Route
+            path="/"
             element={
               !tipoUsuario ? (
                 <LoginPage onLogin={handleLogin} />
+              ) : tipoUsuario === 'admin' ? (
+                <AdminDashboard />
               ) : (
-                tipoUsuario === 'admin' ? (
-                  <AdminDashboard />
-                ) : (
-                  <UserPortal />
-                )
+                <UserPortal />
               )
-            } 
+            }
           />
-          
-          {/* Rutas de Administrador */}
+
+          {/* Rutas para Administrador */}
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/crear-usuario" element={
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-md-8">
-                  <div className="card">
-                    <div className="card-header">
-                      <h4>Crear Nuevo Usuario</h4>
-                    </div>
-                    <div className="card-body">
-                      <CrearUsuarioForm />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          } />
-          <Route path="/admin/crear-factura" element={
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-md-8">
-                  <FacturaForm />
-                </div>
-              </div>
-            </div>
-          } />
-          <Route path="/admin/buscar-usuario" element={
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-md-8">
-                  <div className="card">
-                    <div className="card-header">
-                      <h4>Buscar Usuario</h4>
-                    </div>
-                    <div className="card-body">
-                      <BuscarUsuario />
+          <Route
+            path="/admin/crear-usuario"
+            element={
+              <div className="container">
+                <div className="row justify-content-center">
+                  <div className="col-md-8">
+                    <div className="card">
+                      <div className="card-header">
+                        <h4>Crear Nuevo Usuario</h4>
+                      </div>
+                      <div className="card-body">
+                        <CrearUsuarioForm />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          } />
-          
-          {/* Rutas de Usuario */}
+            }
+          />
+          <Route
+            path="/admin/crear-factura"
+            element={
+              <div className="container">
+                <div className="row justify-content-center">
+                  <div className="col-md-8">
+                    <FacturaForm />
+                  </div>
+                </div>
+              </div>
+            }
+          />
+          <Route
+            path="/admin/buscar-usuario"
+            element={
+              <div className="container">
+                <div className="row justify-content-center">
+                  <div className="col-md-8">
+                    <div className="card">
+                      <div className="card-header">
+                        <h4>Buscar Usuario</h4>
+                      </div>
+                      <div className="card-body">
+                        <BuscarUsuario />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          />
+
+          {/* Rutas para Usuario */}
           <Route path="/usuario" element={<UserPortal />} />
->>>>>>> Prueba
         </Routes>
       </div>
     </Router>
   );
 }
 
-<<<<<<< HEAD
 export default App;
-=======
-export default App;
->>>>>>> Prueba
