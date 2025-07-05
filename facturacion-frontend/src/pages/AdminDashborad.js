@@ -1,173 +1,205 @@
+// src/pages/AdminDashboard.js
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import CrearUsuarioForm from '../components/CrearUsuarioForm';
 import FacturaForm from '../components/FacturaForm';
-import BuscarUsuario from '../components/BuscarUsuario';
-import EstadisticasAdmin from '../components/EstadisticasAdmin';
 
-const AdminDashboard = () => {
+function AdminDashboard() {
   const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalInvoices: 0,
-    pendingPayments: 0,
-    monthlyRevenue: 0
+    totalUsuarios: 0,
+    totalFacturas: 0,
+    facturasPendientes: 0,
+    montoTotal: 0
   });
-  const location = useLocation();
+  const [recentFacturas, setRecentFacturas] = useState([]);
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
-    loadStats();
+    cargarEstadisticas();
+    cargarFacturasRecientes();
   }, []);
 
-  const loadStats = async () => {
+  const cargarEstadisticas = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/admin/stats');
-      setStats(response.data);
+      // Aquí harías llamadas a endpoints específicos para estadísticas
+      // Por ahora simulamos los datos
+      setStats({
+        totalUsuarios: 150,
+        totalFacturas: 430,
+        facturasPendientes: 67,
+        montoTotal: 15420.50
+      });
     } catch (error) {
-      console.error('Error loading stats:', error);
+      console.error('Error al cargar estadísticas:', error);
     }
   };
 
-  const isActive = (path) => location.pathname === path;
+  const cargarFacturasRecientes = async () => {
+    try {
+      // Simulamos facturas recientes
+      setRecentFacturas([
+        { id: 1, cedula: '8-123-456', nombre: 'Juan Pérez', monto: 25.50, estado: 'pendiente', fecha: '2024-01-15' },
+        { id: 2, cedula: '9-789-012', nombre: 'María López', monto: 30.00, estado: 'pagada', fecha: '2024-01-14' },
+        { id: 3, cedula: '8-345-678', nombre: 'Carlos Ruiz', monto: 45.75, estado: 'pendiente', fecha: '2024-01-13' },
+        { id: 4, cedula: '1-234-567', nombre: 'Ana García', monto: 22.30, estado: 'pagada', fecha: '2024-01-12' },
+        { id: 5, cedula: '2-456-789', nombre: 'Luis Martín', monto: 38.90, estado: 'pendiente', fecha: '2024-01-11' }
+      ]);
+    } catch (error) {
+      console.error('Error al cargar facturas recientes:', error);
+    }
+  };
 
-  return (
-    <div className="container-fluid mt-4">
-      <div className="row">
-        {/* Sidebar */}
-        <div className="col-md-3 col-lg-2">
-          <div className="card">
-            <div className="card-header bg-primary text-white">
-              <h6 className="mb-0">Panel de Administración</h6>
-            </div>
-            <div className="list-group list-group-flush">
-              <Link 
-                to="/admin" 
-                className={`list-group-item list-group-item-action ${isActive('/admin') ? 'active' : ''}`}
-              >
-                📊 Dashboard
-              </Link>
-              <Link 
-                to="/admin/usuarios" 
-                className={`list-group-item list-group-item-action ${isActive('/admin/usuarios') ? 'active' : ''}`}
-              >
-                👥 Usuarios
-              </Link>
-              <Link 
-                to="/admin/crear-usuario" 
-                className={`list-group-item list-group-item-action ${isActive('/admin/crear-usuario') ? 'active' : ''}`}
-              >
-                ➕ Crear Usuario
-              </Link>
-              <Link 
-                to="/admin/crear-factura" 
-                className={`list-group-item list-group-item-action ${isActive('/admin/crear-factura') ? 'active' : ''}`}
-              >
-                📄 Crear Factura
-              </Link>
-              <Link 
-                to="/admin/estadisticas" 
-                className={`list-group-item list-group-item-action ${isActive('/admin/estadisticas') ? 'active' : ''}`}
-              >
-                📈 Estadísticas
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="col-md-9 col-lg-10">
-          <Routes>
-            <Route path="/" element={<AdminHome stats={stats} />} />
-            <Route path="/usuarios" element={<BuscarUsuario />} />
-            <Route path="/crear-usuario" element={<CrearUsuarioForm />} />
-            <Route path="/crear-factura" element={<FacturaForm />} />
-            <Route path="/estadisticas" element={<EstadisticasAdmin />} />
-          </Routes>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const AdminHome = ({ stats }) => {
-  return (
+  const renderDashboard = () => (
     <div>
-      <h2 className="mb-4">Dashboard Administrativo</h2>
-      
+      {/* Tarjetas de Estadísticas */}
       <div className="row mb-4">
         <div className="col-md-3">
-          <div className="card bg-primary text-white">
-            <div className="card-body text-center">
-              <h3>{stats.totalUsers}</h3>
-              <p>Usuarios Registrados</p>
+          <div className="card text-white bg-primary">
+            <div className="card-body">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <h4 className="card-title">{stats.totalUsuarios}</h4>
+                  <p className="card-text">Total Usuarios</p>
+                </div>
+                <div className="align-self-center">
+                  <i className="fas fa-users fa-2x"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card bg-success text-white">
-            <div className="card-body text-center">
-              <h3>{stats.totalInvoices}</h3>
-              <p>Facturas Emitidas</p>
+          <div className="card text-white bg-success">
+            <div className="card-body">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <h4 className="card-title">{stats.totalFacturas}</h4>
+                  <p className="card-text">Total Facturas</p>
+                </div>
+                <div className="align-self-center">
+                  <i className="fas fa-file-invoice fa-2x"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card bg-warning text-white">
-            <div className="card-body text-center">
-              <h3>{stats.pendingPayments}</h3>
-              <p>Pagos Pendientes</p>
+          <div className="card text-white bg-warning">
+            <div className="card-body">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <h4 className="card-title">{stats.facturasPendientes}</h4>
+                  <p className="card-text">Pendientes</p>
+                </div>
+                <div className="align-self-center">
+                  <i className="fas fa-clock fa-2x"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card bg-info text-white">
-            <div className="card-body text-center">
-              <h3>${stats.monthlyRevenue}</h3>
-              <p>Ingresos del Mes</p>
+          <div className="card text-white bg-info">
+            <div className="card-body">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <h4 className="card-title">${stats.montoTotal.toFixed(2)}</h4>
+                  <p className="card-text">Monto Total</p>
+                </div>
+                <div className="align-self-center">
+                  <i className="fas fa-dollar-sign fa-2x"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h5>Acciones Rápidas</h5>
-            </div>
-            <div className="card-body">
-              <div className="d-grid gap-2">
-                <Link to="/admin/crear-usuario" className="btn btn-primary">
-                  Crear Nuevo Usuario
-                </Link>
-                <Link to="/admin/crear-factura" className="btn btn-success">
-                  Generar Factura
-                </Link>
-                <Link to="/admin/usuarios" className="btn btn-info">
-                  Buscar Usuario
-                </Link>
-              </div>
-            </div>
-          </div>
+      {/* Facturas Recientes */}
+      <div className="card">
+        <div className="card-header">
+          <h5>Facturas Recientes</h5>
         </div>
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h5>Alertas del Sistema</h5>
-            </div>
-            <div className="card-body">
-              <div className="alert alert-warning">
-                <small>⚠️ {stats.pendingPayments} facturas pendientes de pago</small>
-              </div>
-              <div className="alert alert-info">
-                <small>ℹ️ Sistema funcionando correctamente</small>
-              </div>
-            </div>
+        <div className="card-body">
+          <div className="table-responsive">
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cédula</th>
+                  <th>Cliente</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentFacturas.map(factura => (
+                  <tr key={factura.id}>
+                    <td>{factura.id}</td>
+                    <td>{factura.cedula}</td>
+                    <td>{factura.nombre}</td>
+                    <td>${factura.monto.toFixed(2)}</td>
+                    <td>
+                      <span className={`badge ${factura.estado === 'pagada' ? 'bg-success' : 'bg-warning'}`}>
+                        {factura.estado}
+                      </span>
+                    </td>
+                    <td>{factura.fecha}</td>
+                    <td>
+                      <button className="btn btn-sm btn-outline-primary me-1">
+                        Ver
+                      </button>
+                      <button className="btn btn-sm btn-outline-secondary">
+                        PDF
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   );
-};
+
+  const renderCrearFactura = () => (
+    <div className="row justify-content-center">
+      <div className="col-md-8">
+        <FacturaForm />
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="container mt-4">
+      <div className="row">
+        <div className="col-12">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h2>Panel de Administrador</h2>
+            <div className="btn-group" role="group">
+              <button 
+                className={`btn ${activeTab === 'dashboard' ? 'btn-primary' : 'btn-outline-primary'}`}
+                onClick={() => setActiveTab('dashboard')}
+              >
+                Dashboard
+              </button>
+              <button 
+                className={`btn ${activeTab === 'crear-factura' ? 'btn-primary' : 'btn-outline-primary'}`}
+                onClick={() => setActiveTab('crear-factura')}
+              >
+                Crear Factura
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {activeTab === 'dashboard' && renderDashboard()}
+      {activeTab === 'crear-factura' && renderCrearFactura()}
+    </div>
+  );
+}
 
 export default AdminDashboard;
